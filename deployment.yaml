@@ -93,6 +93,44 @@ resources:
 
 # Productos Instance 
 
+- name: msd-productos-ms
+  type: compute.v1.instance
+  properties:
+    zone: us-central1-a
+    machineType: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/zones/us-central1-a/machineTypes/e2-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+      networkIP: 10.128.0.85
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    tags:
+      items: 
+      - msd-services-firewall
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #!/bin/bash
+          sudo apt-get update
+          sudo apt install python3-pip -y
+          sudo mkdir /sprints
+          cd /sprints
+          sudo git clone https://github.com/ISIS2503-E404-BancoAlpes/Sprint-4.git
+          cd producto_ms
+          sudo pip3 install -r requirements.txt
+  
+          sudo nano /etc/environment
+          MONGO_CLI="mongodb://product_user:isis2503@10.128.0.70:27017"
+            
+
 # Mongo Database instance
 - type: compute.v1.instance
   name: nosqld-mongo-instance-products
@@ -115,3 +153,10 @@ resources:
     tags:
       items: 
       - nosqld-mongo
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+         #!/bin/bash
+         sudo apt-get update
+         docker run -e MONGO_INITDB_ROOT_USERNAME=product_user -e MONGO_INITDB_ROOT_PASSWORD=isis2503 -p 27017:27017 -d mongo
