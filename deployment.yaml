@@ -1,0 +1,117 @@
+resources:
+#FIRE WALL
+- name: msd-api-gateway
+  type: compute.v1.firewall
+  properties:
+    network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+    priority: 1000
+    direction: INGRESS
+    sourceRanges: 
+    - 0.0.0.0/0
+    targetTags:
+    - msd-api-gateway
+    allowed:
+    - IPProtocol: TCP
+      ports: 
+      - 8000
+
+- name: msd-services-apps
+  type: compute.v1.firewall
+  properties:
+    network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+    priority: 1000
+    direction: INGRESS
+    sourceTags: 
+    - msd-api-gateway
+    targetTags:
+    - msd-services-firewall
+    allowed:
+    - IPProtocol: TCP
+      ports: 
+      - 8080
+
+- name: msd-services-apps-web
+  type: compute.v1.firewall
+  properties:
+    network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+    priority: 1000
+    direction: INGRESS
+    sourceRanges: 
+    - 0.0.0.0/0
+    targetTags:
+    - msd-services-firewall
+    allowed:
+    - IPProtocol: TCP
+      ports: 
+      - 8080
+
+- name: msd-service-db
+  type: compute.v1.firewall
+  properties:
+    network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+    priority: 1000
+    direction: INGRESS
+    sourceTags: 
+    - msd-services-firewall
+    targetTags:
+    - msd-service-db
+    allowed:
+    - IPProtocol: TCP
+      ports: 
+      - 5432
+
+      - name: nosqld-firewall-django
+  type: compute.v1.firewall
+  properties:
+    network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+    priority: 1000
+    direction: INGRESS
+    sourceRanges: 
+    - 0.0.0.0/0
+    targetTags:
+    - nosqld-django
+    allowed:
+    - IPProtocol: TCP
+      ports: 
+      - 8080
+
+- name: nosqld-firewall-mongo
+  type: compute.v1.firewall
+  properties:
+    network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+    priority: 1000
+    direction: INGRESS
+    sourceTags: 
+    - nosqld-django
+    targetTags:
+    - nosqld-mongo
+    allowed:
+    - IPProtocol: TCP
+      ports: 
+      - 27017
+
+
+# Productos Instance 
+
+# Mongo Database instance
+- type: compute.v1.instance
+  name: nosqld-mongo-instance-products
+  properties:
+    zone: us-central1-a
+    machineType: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/zones/us-central1-a/machineTypes/e2-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-101-17162-386-64
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+      networkIP: 10.128.0.70
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    tags:
+      items: 
+      - nosqld-mongo
