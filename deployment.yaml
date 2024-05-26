@@ -168,16 +168,22 @@ resources:
       metadata:
         items:
         - key: startup-script
-        value: |
-          #!/bin/bash
-          sudo apt-get update
-          sudo apt install python3-pip -y
-          sudo mkdir /sprints
-          cd /sprints
-          sudo git clone https://github.com/ISIS2503-E404-BancoAlpes/Sprint-4.git
-          cd Sprint-4/cliente_ms
-          sudo pip3 install -r requirements.txt
-          FLASK_APP=run.py flask run --host=0.0.0.0 --port=8080
+          value: |
+            #!/bin/bash
+            sudo apt-get update
+            sudo apt install python3-pip -y
+            sudo mkdir /sprints
+            cd /sprints
+            sudo git clone https://github.com/ISIS2503-E404-BancoAlpes/Sprint-4.git
+            cd Sprint-4/cliente_ms
+            sudo pip3 install -r requirements.txt
+            export SECRET_KEY=your_secret_key
+            export AUTH0_CLIENT_ID=your_client_id
+            export AUTH0_CLIENT_SECRET=your_client_secret
+            export AUTH0_DOMAIN=your_domain.auth0.com
+            export AUTH0_AUDIENCE=your_audience
+            FLASK_APP=run.py flask run --host=0.0.0.0 --port=8080
+
 
   # Mongo Database instance for Products
   - type: compute.v1.instance
