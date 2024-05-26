@@ -90,6 +90,21 @@ resources:
       ports: 
       - 27017
 
+- name: msd-clientes-firewall-django
+    type: compute.v1.firewall
+    properties:
+      network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+      priority: 1000
+      direction: INGRESS
+      sourceRanges: 
+      - 0.0.0.0/0
+      targetTags:
+      - msd-clientes-django
+      allowed:
+      - IPProtocol: TCP
+        ports: 
+        - 8080
+
 
 # Productos Instance 
 
@@ -129,6 +144,43 @@ resources:
   
           sudo nano /etc/environment
           MONGO_CLI="mongodb://product_user:isis2503@10.128.0.70:27017"
+  
+# Clientes app django instance
+  - type: compute.v1.instance
+    name: msd-clientes-instance
+    properties:
+      zone: us-central1-a
+      machineType: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/zones/us-central1-a/machineTypes/e2-micro
+      disks:
+      - deviceName: boot
+        type: PERSISTENT
+        boot: true
+        autoDelete: true
+        initializeParams:
+          sourceImage: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b
+      networkInterfaces:
+      - network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+        networkIP: 10.128.0.71
+        accessConfigs:
+        - name: External NAT
+          type: ONE_TO_ONE_NAT
+      tags:
+        items: 
+        - msd-clientes-django
+      metadata:
+        items:
+        - key: startup-script
+          value: |
+            #!/bin/bash
+            sudo apt-get update
+            sudo apt install python3-pip -y
+            sudo mkdir /sprints
+            cd /sprints
+            sudo git clone https://github.com/ISIS2503-E404-BancoAlpes/Sprint-4.git
+            cd Sprint-4/cliente_ms
+            sudo pip3 install -r requirements.txt
+            sudo python3 manage.py makemigrations
+            sudo python3 manage.py migrate
             
 
 # Mongo Database instance
@@ -160,3 +212,33 @@ resources:
          #!/bin/bash
          sudo apt-get update
          docker run -e MONGO_INITDB_ROOT_USERNAME=product_user -e MONGO_INITDB_ROOT_PASSWORD=isis2503 -p 27017:27017 -d mongo
+
+# Mongo Database instance for Clientes
+- type: compute.v1.instance
+  name: nosqld-mongo-instance-clients
+  properties:
+    zone: us-central1-a
+    machineType: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/zones/us-central1-a/machineTypes/e2-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-101-17162-386-64
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
+      networkIP: 10.128.0.70
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    tags:
+      items: 
+      - nosqld-mongo
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+         #!/bin/bash
+         sudo apt-get update
+         docker run -e MONGO_INITDB_ROOT_USERNAME=client_user -e MONGO_INITDB_ROOT_PASSWORD=isis2503 -p 27017:27017 -d mongo
