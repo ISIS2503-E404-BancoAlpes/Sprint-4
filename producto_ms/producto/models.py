@@ -13,6 +13,7 @@ class Producto(models.Model):
 
     @staticmethod
     def from_mongo(dto):
+        print(dto)
         producto = Producto()
         producto.id     = dto.get('id','')
         producto.nombre = dto.get('nombre', '')
