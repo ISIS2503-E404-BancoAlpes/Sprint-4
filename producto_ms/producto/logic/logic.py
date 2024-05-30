@@ -38,7 +38,7 @@ def createProduct(form):
     producto = transForm(form)
 
     productos_collection = db['producto'] 
-
+    
     producto.id = productos_collection.insert(
         {
             'nombre': producto.nombre,
