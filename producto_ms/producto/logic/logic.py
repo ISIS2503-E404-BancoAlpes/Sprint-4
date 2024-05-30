@@ -30,6 +30,7 @@ def createProduct(form):
     producto = transForm(form)
 
     productos_collection = db['producto'] 
+    print(productos_collection)
     producto.id = productos_collection.insert_one(
         {
             'nombre': producto.nombre,
