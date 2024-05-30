@@ -105,6 +105,36 @@ resources:
         ports: 
         - 8080
 
+  # Para solicitudes
+  - name: firewall-django
+    type: compute.v1.firewall
+    properties:
+      network: https://www.googleapis.com/compute/v1/projects/sprint2-error404-isis2503/global/networks/default
+      priority: 1000
+      direction: INGRESS
+      source-ranges: 
+      - 0.0.0.0/0
+      targetTags:
+      - rest-django
+      allowed:
+      - IPProtocol: TCP
+        ports: 
+        - 8080
+  - name: firewall-db-solicitudes
+    type: compute.v1.firewall
+    properties:
+      network: https://www.googleapis.com/compute/v1/projects/sprint2-error404-isis2503/global/networks/default
+      priority: 1000
+      direction: INGRESS
+      sourceTags: 
+      - rest-django
+      targetTags:
+      - db-solicitudes
+      allowed:
+      - IPProtocol: TCP
+        ports: 
+        - 5432 
+
 
   # Productos Instance
   - name: msd-productos-ms
@@ -141,6 +171,7 @@ resources:
             cd /sprints/Sprint-4/producto_ms/
             sudo pip3 install -r requirements.txt
             echo 'MONGO_CLI="mongodb://product_user:isis2503@10.128.0.70:27017"' | sudo tee -a /etc/environment
+    
     # Mongo Database instance for Products
   - type: compute.v1.instance
     name: nosqld-mongo-instance-products
@@ -200,4 +231,40 @@ resources:
            #!/bin/bash
            sudo apt-get update
            docker run -e MONGO_INITDB_ROOT_USERNAME=client_user -e MONGO_INITDB_ROOT_PASSWORD=monda -p 27017:27017 -d mongo
+
+  # Postgres Database solicitudes
+- type: compute.v1.instance
+  name: solicitudes-db-instance
+  properties:
+    zone: us-central1-a
+    machineType: https://www.googleapis.com/compute/v1/projects/sprint2-error404-isis2503/zones/us-central1-a/machineTypes/e2-micro
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b
+    networkInterfaces:
+    - network: https://www.googleapis.com/compute/v1/projects/sprint2-error404-isis2503/global/networks/default
+      networkIP: 10.128.0.52
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    tags:
+      items: 
+      - db-solicitudes
+    metadata:
+      items:
+      - key: startup-script
+        value: |
+          #!/bin/bash
+          sudo apt-get update
+          sudo apt-get install -y postgresql postgresql-contrib
+          sudo -u postgres psql -c "CREATE USER banco_user WITH PASSWORD 'isis2503';"
+          sudo -u postgres createdb -O banco_user banco_db
+          echo "host all all 0.0.0.0/0 trust" | sudo tee -a /etc/postgresql/12/main/pg_hba.conf
+          echo "listen_addresses='*'" | sudo tee -a /etc/postgresql/12/main/postgresql.conf
+          echo "max_connections=2000" | sudo tee -a /etc/postgresql/12/main/postgresql.conf
+          sudo service postgresql restart
   
