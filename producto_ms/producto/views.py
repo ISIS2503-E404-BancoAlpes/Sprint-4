@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .logic.logic import getProdcutos , getProducto , deleteProduct, createProduct
+from .logic.logic import getProdcutos , getProducto ,createProduct
 # Create your views here.
 from rest_framework.decorators import api_view
 from .forms import ProductoForm
