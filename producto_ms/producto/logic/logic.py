@@ -24,31 +24,28 @@ def getProducto(id):
     client.close() 
     return producto 
 
-def createProduct(data):
+def createProduct(form):
     client = MongoClient(settings.MONGO_CLI)
     db = client.productos_db
-    producto =verifyProductData(data)
+    producto = transForm(form)
 
     productos_collection = db['products'] 
     producto.id = productos_collection.insert_one(
         {
             'nombre': producto.nombre,
             'tier'  : producto.tier,
-            'fecha' : producto.fecha ,
+            'fecha' : producto.fecha,
             'tipo'  : producto.tipo
         }
     )
     client.close()
     return () 
 
-def verifyProductData(data):
-    if 'name' not in data:
-        raise ValueError('name is required')
-    
+def transForm(form):
+
     producto = Producto()
-    producto.id= data['id']
-    producto.nombre = data['nombre']
-    producto.tipo = data['tipo']
-    producto.tier = data['tier']
-    producto.fecha =  data['fecha']
+    producto.nombre = form.nombre
+    producto.tipo = form.tipo
+    producto.tier = form.tier
+    producto.fecha =  form.fecha 
     return producto
