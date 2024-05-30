@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 @api_view(["GET", "POST"])
 def ProductosList(request): 
     productos= getProdcutos()
+    print(productos)
     context= {"productoList": productos }
     return render(request,'producto/productos.html',context)
 
