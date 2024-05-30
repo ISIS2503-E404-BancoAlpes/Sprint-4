@@ -57,12 +57,12 @@ upstreams:
 
   - name: solicitudes_upstream
     targets:
-      - target: 10.128.0.86:8080
+      - target: 10.128.0.22:8080
         weight: 100
      
   - name:  banco_app_upstream
     targets:
-      - target: 10.128.0.86:8080
+      - target: 10.128.0.22:8080
         weight: 100
       - target: 10.128.0.85:8080
         weight: 100
