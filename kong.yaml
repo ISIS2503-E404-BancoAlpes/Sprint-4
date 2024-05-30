@@ -1,0 +1,73 @@
+_format_version: "2.1"
+
+services:
+
+  - host: banco_app_upstream
+    name: banco_app_service
+    protocol: http
+    routes:
+      
+      - name: banco_app
+        paths:
+          - /
+        strip_path: false
+  
+
+  - name: producto_service
+    host: producto_upstream
+    protocol: http
+    routes:
+      - name: productos
+        paths:
+          - /productos
+          - /productocreate
+          - /productoUpdate/
+        strip_path: false
+    
+  - name: cliente_service
+    host: cliente_upstream
+    protocol: http
+    routes:
+      - name: clientes
+        paths:
+          - /
+        strip_path: false
+  
+  - name: solicitudes_service
+    host: solicitudes_upstream
+    targets:
+    protocol: http
+    routes:
+      - name:
+        paths:
+          - /solicitudes
+          - /solicitudescreate
+          - /solicitudesupdate/
+        strip_path: false 
+upstreams:
+  - name: productos_upstream
+    targets:
+      - target: 10.128.0.85:8080
+        weight: 100
+
+  - name: clientes_upstream
+    targets:
+      - target: 10.128.0.71:8080
+        weight: 100
+
+  - name: solicitudes_upstream
+    targets:
+      - target: 10.128.0.86:8080
+        weight: 100
+
+
+       
+
+  - name:  banco_app_upstream
+    targets:
+      - target: 10.128.0.86:8080
+        weight: 100
+      - target: 10.128.0.85:8080
+        weight: 100
+      - target: 10.128.0.71:8080
+        weight: 100

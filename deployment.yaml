@@ -228,43 +228,7 @@ resources:
     
             sudo nano /etc/environment
             MONGO_CLI="mongodb://product_user:isis2503@10.128.0.70:27017"
-  # Productos Instance
-  - name: msd-productos-ms
-    type: compute.v1.instance
-    properties:
-      zone: us-central1-a
-      machineType: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/zones/us-central1-a/machineTypes/e2-micro
-      disks:
-      - deviceName: boot
-        type: PERSISTENT
-        boot: true
-        autoDelete: true
-        initializeParams:
-          sourceImage: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b
-      networkInterfaces:
-      - network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
-        networkIP: 10.128.0.85
-        accessConfigs:
-        - name: External NAT
-          type: ONE_TO_ONE_NAT
-      tags:
-        items: 
-        - msd-services-firewall
-      metadata:
-        items:
-        - key: startup-script
-          value: |
-            #!/bin/bash
-            sudo apt-get update
-            sudo apt install python3-pip -y
-            sudo mkdir /sprints
-            cd /sprints
-            sudo git clone https://github.com/ISIS2503-E404-BancoAlpes/Sprint-4.git
-            cd producto_ms
-            sudo pip3 install -r requirements.txt
-    
-            sudo nano /etc/environment
-            MONGO_CLI="mongodb://product_user:isis2503@10.128.0.70:27017"
+  
   
   # Clientes app django instance
   # Clientes app Flask instance
@@ -305,41 +269,6 @@ resources:
             sudo python3 manage.py migrate
 
   # Mongo Database instance for Products
-  - type: compute.v1.instance
-    name: nosqld-mongo-instance-products
-    properties:
-      zone: us-central1-a
-      machineType: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/zones/us-central1-a/machineTypes/e2-micro
-      disks:
-      - deviceName: boot
-        type: PERSISTENT
-        boot: true
-        autoDelete: true
-        initializeParams:
-          sourceImage: https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-101-17162-386-64
-      networkInterfaces:
-      - network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
-        networkIP: 10.128.0.70
-        accessConfigs:
-        - name: External NAT
-          type: ONE_TO_ONE_NAT
-      tags:
-        items: 
-        - nosqld-mongo
-      metadata:
-        items:
-        - key: startup-script
-          value: |
-           #!/bin/bash
-           sudo apt-get update
-           docker run -e MONGO_INITDB_ROOT_USERNAME=product_user -e MONGO_INITDB_ROOT_PASSWORD=isis2503 -p 27017:27017 -d mongo
-            export SECRET_KEY=your_secret_key
-            export AUTH0_CLIENT_ID=your_client_id
-            export AUTH0_CLIENT_SECRET=your_client_secret
-            export AUTH0_DOMAIN=your_domain.auth0.com
-            export AUTH0_AUDIENCE=your_audience
-            FLASK_APP=run.py flask run --host=0.0.0.0 --port=8080
-
 
   # Mongo Database instance for Products
   - type: compute.v1.instance
@@ -370,36 +299,6 @@ resources:
            #!/bin/bash
            sudo apt-get update
            docker run -e MONGO_INITDB_ROOT_USERNAME=product_user -e MONGO_INITDB_ROOT_PASSWORD=isis2503 -p 27017:27017 -d mongo
-
-  # Mongo Database instance for Clientes
-  - type: compute.v1.instance
-    name: nosqld-mongo-instance-clients
-    properties:
-      zone: us-central1-a
-      machineType: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/zones/us-central1-a/machineTypes/e2-micro
-      disks:
-      - deviceName: boot
-        type: PERSISTENT
-        boot: true
-        autoDelete: true
-        initializeParams:
-          sourceImage: https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-101-17162-386-64
-      networkInterfaces:
-      - network: https://www.googleapis.com/compute/v1/projects/<id-proyecto>/global/networks/default
-        networkIP: 10.128.0.72
-        accessConfigs:
-        - name: External NAT
-          type: ONE_TO_ONE_NAT
-      tags:
-        items: 
-        - nosqld-mongo
-      metadata:
-        items:
-        - key: startup-script
-          value: |
-           #!/bin/bash
-           sudo apt-get update
-           docker run -e MONGO_INITDB_ROOT_USERNAME=client_user -e MONGO_INITDB_ROOT_PASSWORD=isis2503 -p 27017:27017 -d mongo
 
   # Mongo Database instance for Clientes
   - type: compute.v1.instance
