@@ -37,7 +37,7 @@ def ProductoCreate(request):
 
 @api_view(["GET", "POST"])
 def ProductoUpdate(request,id): 
-    producto= getProducto(request,id)
+    producto= getProducto(id)
     if request.method == 'POST':
         form= ProductoForm(request.POST, instance=producto)
         if form.is_valid():
