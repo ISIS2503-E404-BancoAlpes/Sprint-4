@@ -140,9 +140,7 @@ resources:
             sudo git clone https://github.com/ISIS2503-E404-BancoAlpes/Sprint-4.git
             cd producto_ms
             sudo pip3 install -r requirements.txt
-    
-            sudo nano /etc/environment
-            MONGO_CLI="mongodb://product_user:isis2503@10.128.0.70:27017"
+            echo 'MONGO_CLI="mongodb://product_user:isis2503@10.128.0.70:27017"' | sudo tee -a /etc/environment
     # Mongo Database instance for Products
   - type: compute.v1.instance
     name: nosqld-mongo-instance-products
