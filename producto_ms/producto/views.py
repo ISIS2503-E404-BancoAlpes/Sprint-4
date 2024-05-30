@@ -35,6 +35,7 @@ def ProductoCreate(request):
     }
     return render(request, 'producto/createProducto.html', context) 
 
+@api_view(["GET", "POST"])
 def ProductoUpdate(request,id): 
     producto= getProducto(request,id)
     if request.method == 'POST':
