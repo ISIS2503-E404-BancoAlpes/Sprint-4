@@ -55,7 +55,7 @@ ROOT_URLCONF = 'producto_ms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'producto_ms', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
