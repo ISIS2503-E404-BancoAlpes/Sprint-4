@@ -8,13 +8,13 @@ import datetime
 
 def getProdcutos():
     client = MongoClient(settings.MONGO_CLI)
-    print(client)
+   
     db = client.productos_db
     productos= [] 
     productos_collection = db['producto']
-    print(productos_collection, "Colection")
+   
     productos_db = productos_collection.find({})
-    print(productos_db, "Producto db")
+
     productos = [   ]
     
     for producto in productos_db:
@@ -38,8 +38,7 @@ def createProduct(form):
     producto = transForm(form)
 
     productos_collection = db['producto'] 
-    print(productos_collection)
-    print(producto)
+
     producto.id = productos_collection.insert_one(
         {
             'nombre': producto.nombre,
@@ -48,6 +47,7 @@ def createProduct(form):
             'tipo'  : producto.tipo
         }
     )
+    
     client.close()
     return () 
 

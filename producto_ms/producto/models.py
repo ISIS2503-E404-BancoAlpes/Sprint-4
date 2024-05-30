@@ -8,12 +8,11 @@ class Producto(models.Model):
     fecha= models.DateField(auto_created=True ) 
     tier = models.CharField(null=True, blank= True,max_length=50)
     def __str__(self): 
-        return "%s , %s , %s "
+        return "%s , %s , %s ,%s"(self.id,self.nombre,self.fecha,self.tier)
 
 
     @staticmethod
     def from_mongo(dto):
-        print(dto, "DTO")
         producto = Producto()
         producto.id     = dto.get('id','')
         producto.nombre = dto.get('nombre', '')

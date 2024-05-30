@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 @api_view(["GET", "POST"])
 def ProductosList(request): 
     productos= getProdcutos()
-    print(productos, "PROD")
     context= {"productoList": productos }
     return render(request,'producto/productos.html',context)
 
@@ -41,7 +40,7 @@ def ProductoUpdate(request,producto_id):
         form= ProductoForm(request.POST, instance=producto)
         if form.is_valid():
             createProduct(form) 
-            return HttpResponseRedirect(reverse("solicitudesList"))
+            return HttpResponseRedirect(reverse("ProductoList"))
         else:
             print(form.errors) 
     else: 
