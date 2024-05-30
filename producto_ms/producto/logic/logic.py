@@ -8,6 +8,7 @@ import datetime
 
 def getProdcutos():
     client = MongoClient(settings.MONGO_CLI)
+    print(client)
     db = client.productos_db
     productos= [] 
     productos_collection = db['prodcuto']
