@@ -35,8 +35,8 @@ def ProductoCreate(request):
     }
     return render(request, 'producto/createProducto.html', context) 
 
-def ProductoUpdate(request,producto_id): 
-    producto= getProducto(request,producto_id)
+def ProductoUpdate(request,id): 
+    producto= getProducto(request,id)
     if request.method == 'POST':
         form= ProductoForm(request.POST, instance=producto)
         if form.is_valid():
