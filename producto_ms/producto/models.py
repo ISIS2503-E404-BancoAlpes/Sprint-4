@@ -3,6 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Producto(models.Model):
+    id = models.CharField(max_length=50, default= None)    
     nombre = models.CharField(max_length=50, default= None)
     tipo = models.CharField(max_length=50, default= None)
     fecha= models.DateTimeField()
