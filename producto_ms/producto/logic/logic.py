@@ -54,8 +54,8 @@ def createProduct(form):
 def transForm(form):
 
     producto = Producto()
-    nombre,tier,tipo,fecha= form.fields
-    print(nombre,tier,tipo,fecha)
+    nombre,tier,tipo,fecha= form.nombre
+ 
     producto.nombre = nombre
     producto.tipo = tipo
     producto.tier = tier
