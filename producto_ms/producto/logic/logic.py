@@ -11,7 +11,9 @@ def getProdcutos():
     db = client.productos_db
     productos= [] 
     productos_collection = db['prodcuto']
+    print(productos_collection, "Colection")
     productos_db = productos_collection.find({})
+    print(productos_db, "Producto db")
     productos += [ Producto.from_mongo(producto) for producto in productos_db ]
     client.close()
     return productos
@@ -31,6 +33,7 @@ def createProduct(form):
 
     productos_collection = db['producto'] 
     print(productos_collection)
+    print(producto)
     producto.id = productos_collection.insert_one(
         {
             'nombre': producto.nombre,
