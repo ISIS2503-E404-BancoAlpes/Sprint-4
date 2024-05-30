@@ -11,7 +11,7 @@ def getProdcutos():
     print(client)
     db = client.productos_db
     productos= [] 
-    productos_collection = db['prodcuto']
+    productos_collection = db['producto']
     print(productos_collection, "Colection")
     productos_db = productos_collection.find({})
     print(productos_db, "Producto db")
@@ -19,15 +19,15 @@ def getProdcutos():
     
     for producto in productos_db:
       productos.append( Producto.from_mongo(producto))
-      
-       
+
+
     client.close()
     return productos
 
 def getProducto(id):
     client = MongoClient(settings.MONGO_CLI)
     db = client.productos_db
-    productos_collection = db['prodcuto']
+    productos_collection = db['producto']
     producto = productos_collection.find_one({'id':ObjectId(id)})
     client.close() 
     return producto 
