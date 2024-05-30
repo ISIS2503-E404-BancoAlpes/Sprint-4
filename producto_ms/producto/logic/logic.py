@@ -15,7 +15,12 @@ def getProdcutos():
     print(productos_collection, "Colection")
     productos_db = productos_collection.find({})
     print(productos_db, "Producto db")
-    productos += [ Producto.from_mongo(producto) for producto in productos_db ]
+    productos = [   ]
+    
+    for producto in productos_db:
+      productos.append( Producto.from_mongo(producto))
+      
+       
     client.close()
     return productos
 
