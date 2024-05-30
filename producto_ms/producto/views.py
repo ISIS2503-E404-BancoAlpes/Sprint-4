@@ -32,7 +32,7 @@ def ProductoCreate(request):
     context = {
         'form': form,
     }
-    return render(request, 'prodcuto/createProducto.html', context) 
+    return render(request, 'producto/createProducto.html', context) 
 
 def ProductoUpdate(request,producto_id): 
     producto= getProducto(request,producto_id)
