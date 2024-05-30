@@ -10,6 +10,7 @@ class ProductoForm(forms.ModelForm):
             'nombre',
             'tier',
             'tipo', 
+            'fecha'
           
         ]
         labels= {
@@ -17,5 +18,5 @@ class ProductoForm(forms.ModelForm):
             'nombre':'nombre',
             'tier': 'Tier',
             'tipo': 'Tipo', 
-     
+            'fecha': 'Fecha'
         }
