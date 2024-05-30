@@ -14,7 +14,7 @@ class Producto(models.Model):
     @staticmethod
     def from_mongo(dto):
         producto = Producto()
-        producto.id     = dto.get('id','')
+        producto.id     =  str(dto['_id'])
         producto.nombre = dto.get('nombre', '')
         producto.tipo   = dto.get('tipo','' )
         producto.tier   = dto.get('tier', '')
