@@ -15,7 +15,7 @@ def getProdcutos():
    
     productos_db = productos_collection.find({})
 
-    productos = [   ]
+    productos = []
     
     for producto in productos_db:
       productos.append( Producto.from_mongo(producto))
@@ -55,6 +55,7 @@ def transForm(form):
 
     producto = Producto()
     nombre,tier,tipo,fecha= form.fields
+    print(nombre,tier,tipo,fecha)
     producto.nombre = nombre
     producto.tipo = tipo
     producto.tier = tier
