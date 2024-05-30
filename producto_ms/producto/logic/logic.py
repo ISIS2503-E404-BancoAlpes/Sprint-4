@@ -39,7 +39,7 @@ def createProduct(form):
 
     productos_collection = db['producto'] 
 
-    producto.id = productos_collection.insert_one(
+    producto.id = productos_collection.insert(
         {
             'nombre': producto.nombre,
             'tier'  : producto.tier,
@@ -54,4 +54,5 @@ def createProduct(form):
 def transForm(form):
 
     producto = form.save(commit=False) 
+    producto.fecha= datetime.datetime.now()
     return producto
